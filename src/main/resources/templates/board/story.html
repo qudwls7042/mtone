@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- 타임리프를 사용하기 위한 태그 선언 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- 내부 css -->
+    <style>
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+    </style>
+
+    <!-- 내부 js -->
+    <script>
+        window.onload = function() {
+            console.log("");
+            console.log("[window onload] : [start]");
+            console.log("");
+        };
+
+    </script>
+
+</head>
+    <body>
+        <!-- 테이블 선언 실시 -->
+        <form th:action="@{../delete}" method="post">
+            <input type="hidden" id="story_no" name="story_no" th:value="${story.STORY_NO}">
+            <table>
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>조회수</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span th:text="${story.TITLE}"></span></td>
+                    <td><span th:text="${story.CONTENT}"></span></td>
+                    <td><span th:text="${story.VIEWS}"></span></td>
+                    <td><span th:text="${story.INIT_DATE}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+            <a th:href="@{../edit/{story_no}(story_no = ${story.STORY_NO})}">글수정</a>
+            <button type="submit">글삭제</button>
+        </form>
+    </body>
+</html>

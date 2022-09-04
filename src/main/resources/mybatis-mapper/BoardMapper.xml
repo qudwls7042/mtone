@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.torun.mtone.mapper.BoardMapper">
+    <select id="readStories" resultType="hashmap">
+        SELECT * FROM TB_BASIC_BOARD ORDER BY INIT_DATE DESC
+    </select>
+
+    <select id="readStory" parameterType="string" resultType="hashmap">
+        SELECT * FROM TB_BASIC_BOARD WHERE STORY_NO = #{story_no}
+    </select>
+
+    <insert id="inputStory" parameterType="StoryVo">
+        INSERT INTO TB_BASIC_BOARD
+        (story_no, title, content, init_date, update_date)
+        VALUES
+        ('BAS' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') || STORY_NO_SEQ.NEXTVAL, #{title}, #{content}, TO_CHAR(SYSDATE), NULL)
+    </insert>
+
+    <update id="editStory" parameterType="StoryVo">
+        UPDATE TB_BASIC_BOARD
+           SET CONTENT = #{content}
+         WHERE STORY_NO = #{story_no}
+    </update>
+
+    <delete id="deleteStory" parameterType="string">
+        DELETE FROM TB_BASIC_BOARD WHERE STORY_NO = #{story_no}
+    </delete>
+</mapper>

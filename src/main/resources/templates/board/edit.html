@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- 타임리프를 사용하기 위한 태그 선언 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- 내부 css -->
+    <style>
+        div {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+    </style>
+
+</head>
+    <body>
+        <form th:action="@{../edit}" method="post">
+            <div>
+                <h1>제목</h1>
+                <span id="title" th:text="${oldStory.TITLE}"></span>
+            </div>
+            <div>
+                <h1>내용</h1>
+                <input type="hidden" id="story_no" name="story_no" th:value="${oldStory.STORY_NO}"></input>
+                <input type="text" id="content" name="content" th:value="${oldStory.CONTENT}"></input>
+            </div>
+            <button type="submit">완료</button>
+        </form>
+    </body>
+</html>
