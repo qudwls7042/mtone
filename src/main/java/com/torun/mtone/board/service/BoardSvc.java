@@ -12,4 +12,7 @@ public interface BoardSvc {
     public void inputStory(StoryVo vo);
     public void editStory(StoryVo vo);
     public void deleteStory(String story_no);
+    public void inputComment(Map<String, String> comment);
+
+    public List<Map<String, String>> readComments(String story_no);
 }

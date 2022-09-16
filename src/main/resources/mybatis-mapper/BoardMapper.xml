@@ -13,9 +13,22 @@
 
     <insert id="inputStory" parameterType="StoryVo">
         INSERT INTO TB_BASIC_BOARD
-        (story_no, title, content, init_date, update_date)
+        (
+         story_no
+         , title
+         , content
+         , init_date
+         , update_date
+         , writer
+         )
         VALUES
-        ('BAS' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') || STORY_NO_SEQ.NEXTVAL, #{title}, #{content}, TO_CHAR(SYSDATE), NULL)
+        (
+         'BAS' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') || STORY_NO_SEQ.NEXTVAL
+         , #{title}, #{content}
+         , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
+         , NULL
+         , #{writer}
+         )
     </insert>
 
     <update id="editStory" parameterType="StoryVo">
@@ -27,4 +40,18 @@
     <delete id="deleteStory" parameterType="string">
         DELETE FROM TB_BASIC_BOARD WHERE STORY_NO = #{story_no}
     </delete>
+
+    <insert id="inputComment" parameterType="hashmap">
+        INSERT INTO TB_BASIC_BOARD_COMMENT
+            (story_no, comment_no, comment_content, init_date)
+        VALUES
+            (#{story_no}, 'COM' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') || COMMENT_NO_SEQ.NEXTVAL, #{comment_content}, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'))
+    </insert>
+
+    <select id="readComments" parameterType="string" resultType="hashmap">
+        SELECT *
+          FROM TB_BASIC_BOARD_COMMENT
+         WHERE STORY_NO = #{story_no}
+          ORDER BY INIT_DATE DESC
+    </select>
 </mapper>

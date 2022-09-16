@@ -34,6 +34,17 @@ public class BoardSvcImpl implements BoardSvc{
     }
 
     @Override
+    public void inputComment(Map<String, String> comment) {
+        boardMapper.inputComment(comment);
+    }
+
+    @Override
+    public List<Map<String, String>> readComments(String story_no) {
+        List<Map<String, String>> comments = boardMapper.readComments(story_no);
+        return comments;
+    }
+
+    @Override
     public List<Map<String, String>> readStories() {
         List<Map<String, String>> stories = boardMapper.readStories();
         return stories;

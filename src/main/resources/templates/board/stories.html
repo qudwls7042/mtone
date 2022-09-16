@@ -20,55 +20,63 @@
       padding: 8px;
     }
 
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-
   </style>
-
-    <!-- 내부 js -->
-    <script>
-    window.onload = function() {
-      console.log("");
-      console.log("[window onload] : [start]");
-      console.log("");
-    };
-
-    document.getElementsByClassName("story").onclick = function() {
-        readStory();
-    }
-
-    function readStory() {
-
-    }
-  </script>
-
 </head>
 
 <body>
-
-<!-- 테이블 선언 실시 -->
-<table>
-
-    <thead>
-    <tr>
-        <th>제목</th>
-        <th>조회수</th>
-        <th>작성일</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="story : ${stories}" class="story">
-        <td><a th:text="${story.TITLE}" th:href="@{./stories/{story_no}(story_no = ${story.STORY_NO})}"></a></td>
-        <td><span th:text="${story.VIEWS}"></span></td>
-        <td><span th:text="${story.INIT_DATE}"></span></td>
-    </tr>
-    </tbody>
-</table>
-
+<form>
+    <!-- 테이블 선언 실시 -->
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>좋아요</th>
+            <th>조회수</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="story : ${stories}">
+            <input type="hidden" id="hidden_story_no" name="hidden_story_no"/>
+            <td><a th:text="${story.TITLE}" th:href="@{./stories/{story_no}(story_no = ${story.STORY_NO})}"></a></td>
+            <td><span th:text="${story.WRITER}"></span></td>
+            <td>
+                <button id="btn_like" name="btn_like">좋아요</button>
+                <span th:text="${story.LIKE_CNT}"></span>
+            </td>
+            <td><span th:text="${story.VIEWS}"></span></td>
+            <td><span th:text="${story.INIT_DATE}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
 <a href="/board/add">글쓰기</a>
 
 </body>
+
+<script>
+
+    let storyNo = $("#hidden_story_no").val();
+    let params = {'story_no' : storyNo};
+
+    $(document).on('click', '#btn_like', function (e) {
+        e.preventDefault();
+        $.ajax({
+           url:'../like'
+           ,type:'POST'
+           ,dataType:'JSON'
+           ,data: JSON.stringify(params)
+           ,contentType:'application/json'
+           ,success: function () {
+
+            }
+        });
+    });
+
+    $(function () {
+
+    });
+</script>
 
 </html>

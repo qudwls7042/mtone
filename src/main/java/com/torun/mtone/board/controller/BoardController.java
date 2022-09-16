@@ -1,6 +1,7 @@
 package com.torun.mtone.board.controller;
 
 import com.torun.mtone.board.service.BoardSvc;
+import com.torun.mtone.board.vo.CommentVo;
 import com.torun.mtone.board.vo.StoryVo;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -8,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -30,7 +31,6 @@ public class BoardController {
 
     @GetMapping("/stories")
     public ModelAndView readStories() {
-
         ModelAndView mv = new ModelAndView("board/stories");
         mv.addObject("stories", boardSvcImpl.readStories());
         return mv;
@@ -58,8 +58,7 @@ public class BoardController {
     @GetMapping("/edit/{story_no}")
     public ModelAndView moveToEditForm(@PathVariable String story_no) {
         ModelAndView mv = new ModelAndView("board/edit");
-        mv.addObject("oldStory", boardSvcImpl.readStory(story_no));
-        mv.addObject("newStory", new StoryVo());
+        mv.addObject("story", boardSvcImpl.readStory(story_no));
         return mv;
     }
 
@@ -73,5 +72,22 @@ public class BoardController {
     public String deleteStory(String story_no) {
         boardSvcImpl.deleteStory(story_no);
         return "redirect:/board/stories";
+    }
+
+    @ResponseBody
+    @PostMapping("/comments")
+    public List<Map<String, String>> comments(@RequestBody CommentVo commentVo) {
+        List<Map<String, String>> data = boardSvcImpl.readComments(commentVo.getStory_no());
+        return data;
+    }
+
+    @ResponseBody
+    @PostMapping("/reply")
+    public Map<String, Object> addComment(@RequestBody HashMap comment) {
+        boardSvcImpl.inputComment(comment);
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", true);
+        result.put("msg", "성공");
+        return result;
     }
 }

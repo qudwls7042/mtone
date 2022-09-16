@@ -7,11 +7,10 @@
 
     <!-- 내부 css -->
     <style>
-
         table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
-            width: 100%;
+            width: 50%;
         }
 
         td, th {
@@ -19,28 +18,16 @@
             text-align: left;
             padding: 8px;
         }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-
     </style>
-
-    <!-- 내부 js -->
-    <script>
-        window.onload = function() {
-            console.log("");
-            console.log("[window onload] : [start]");
-            console.log("");
-        };
-
-    </script>
-
 </head>
     <body>
         <!-- 테이블 선언 실시 -->
-        <form th:action="@{../delete}" method="post">
+        <form id="form" name="form">
             <input type="hidden" id="story_no" name="story_no" th:value="${story.STORY_NO}">
+            <div>
+                <a th:href="@{../edit/{story_no}(story_no = ${story.STORY_NO})}">글수정</a>
+                <button type="button" id="btn_delete_story">글삭제</button>
+            </div>
             <table>
                 <thead>
                 <tr>
@@ -59,8 +46,107 @@
                 </tr>
                 </tbody>
             </table>
-            <a th:href="@{../edit/{story_no}(story_no = ${story.STORY_NO})}">글수정</a>
-            <button type="submit">글삭제</button>
+           <table>
+                <thead>
+                    <tr>
+                        <th>
+                            댓글
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="commentBody">
+                </tbody>
+            </table>
         </form>
     </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- 내부 js -->
+<script>
+
+    jQuery.fn.serializeObject = function() {
+        let obj = null;
+        try {
+            if(this[0].tagName && this[0].tagName.toUpperCase() == "FORM" ) {
+                const arr = this.serializeArray();
+                if(arr){
+                    obj = {};
+                    jQuery.each(arr, function() {
+                        obj[this.name] = this.value;
+                    });
+                }
+            }
+        }catch(e) {
+            alert(e.message);
+        }finally  {}
+        return obj;
+    }
+
+
+    let story_no = $("#story_no").val();
+    let params = {"story_no" : story_no};
+
+    function fn_get_comments(){
+
+        console.log(params);
+        console.log(story_no);
+
+        $.ajax({
+            url : '../comments'
+            ,type: 'POST'
+            ,data : JSON.stringify(params)
+            ,dataType: 'JSON'
+            ,contentType: 'application/json'
+            ,success: function(data){
+                console.log(data);
+                let str = "";
+                $.each(data, function(index, element) {
+                    str=str+'<tr><td><span>'+element.COMMENT_CONTENT+'</span></td></tr>';
+                });
+                str=str+'<tr><td><input type="text" id="comment_content" name="comment_content"/></td></tr>';
+                str=str+'<tr><td><button id="btn_write_comment">댓글 작성</button></td></tr>';
+                $('#commentBody').append(str);
+            }//success
+        });	//ajax
+    }//function
+
+    $('#btn_delete_story').click(function() {
+        $('#form').attr('action', '../delete');
+        $('#form').attr('method', 'POST');
+        $('#form').submit();
+    });
+
+    $(function(){
+        fn_get_comments();
+
+        $(document).on('click', '#btn_write_comment', function(e){
+            console.log("들어옴");
+            e.preventDefault();
+            let $form = $(this).closest("form[name='form']");
+            $.ajax({
+                url: '../reply'
+                , type: 'POST'
+                , dataType: 'JSON'
+                , data: JSON.stringify($form.serializeObject())
+                , contentType: 'application/json'
+                , success : function(data) {
+                    console.log(data);
+                    //$form.find("input[name='comment_content']").val('');
+                    $("#commentBody").html('');
+                    fn_get_comments();
+                }
+                , error : function () {
+                    console.log("실패");
+                }
+            });
+        });
+
+        /*$('#btn_write_comment').click(function (e) {
+
+        });*/
+
+    });
+</script>
+
 </html>
