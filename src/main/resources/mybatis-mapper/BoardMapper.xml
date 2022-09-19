@@ -43,10 +43,26 @@
 
     <insert id="inputComment" parameterType="hashmap">
         INSERT INTO TB_BASIC_BOARD_COMMENT
-            (story_no, comment_no, comment_content, init_date)
+            (
+             story_no
+             , comment_no
+             , content
+             , init_date
+             , writer
+             )
         VALUES
-            (#{story_no}, 'COM' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') || COMMENT_NO_SEQ.NEXTVAL, #{comment_content}, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'))
+            (
+             #{story_no}
+             , 'COM' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MI') || COMMENT_NO_SEQ.NEXTVAL
+             , #{comment_content}
+             , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
+            , #{comment_writer}
+             )
     </insert>
+
+    <delete id="deleteComments" parameterType="string">
+        DELETE FROM TB_BASIC_BOARD_COMMENT WHERE STORY_NO = #{story_no}
+    </delete>
 
     <select id="readComments" parameterType="string" resultType="hashmap">
         SELECT *

@@ -1,0 +1,13 @@
+section {
+    margin-left: 15px;
+}
+
+td {
+    text-decoration: none;
+    color: black;
+}
+
+.common_title {
+    padding: 15px 0px 15px 0px;
+    border-bottom: 1px solid black;
+}

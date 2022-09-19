@@ -39,6 +39,11 @@ public class BoardSvcImpl implements BoardSvc{
     }
 
     @Override
+    public void deleteComments(String story_no) {
+        boardMapper.deleteComments(story_no);
+    }
+
+    @Override
     public List<Map<String, String>> readComments(String story_no) {
         List<Map<String, String>> comments = boardMapper.readComments(story_no);
         return comments;

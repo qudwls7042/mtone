@@ -65,12 +65,13 @@ public class BoardController {
     @PostMapping("/edit")
     public String editStory(StoryVo story) {
         boardSvcImpl.editStory(story);
-        return "redirect:/board/stories";
+        return "redirect:/board/stories/" + story.getStory_no();
     }
 
     @PostMapping("/delete")
     public String deleteStory(String story_no) {
         boardSvcImpl.deleteStory(story_no);
+        boardSvcImpl.deleteComments(story_no);
         return "redirect:/board/stories";
     }
 

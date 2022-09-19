@@ -19,4 +19,6 @@ public interface BoardMapper {
 
     public void inputComment(Map<String, String> comment);
     public List<Map<String, String>> readComments(String story_no);
+
+    void deleteComments(String story_no);
 }
