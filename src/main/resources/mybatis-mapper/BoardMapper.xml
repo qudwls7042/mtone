@@ -3,11 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.torun.mtone.mapper.BoardMapper">
-    <select id="readStories" resultType="hashmap">
+    <select id="readStories" resultType="ToLowerCaseMap">
         SELECT * FROM TB_BASIC_BOARD ORDER BY INIT_DATE DESC
     </select>
 
-    <select id="readStory" parameterType="string" resultType="hashmap">
+    <select id="readStory" parameterType="string" resultType="ToLowerCaseMap">
         SELECT * FROM TB_BASIC_BOARD WHERE STORY_NO = #{story_no}
     </select>
 
@@ -64,10 +64,16 @@
         DELETE FROM TB_BASIC_BOARD_COMMENT WHERE STORY_NO = #{story_no}
     </delete>
 
-    <select id="readComments" parameterType="string" resultType="hashmap">
+    <select id="readComments" parameterType="string" resultType="ToLowerCaseMap">
         SELECT *
           FROM TB_BASIC_BOARD_COMMENT
          WHERE STORY_NO = #{story_no}
           ORDER BY INIT_DATE DESC
     </select>
+
+    <update id="plusViews" parameterType="string">
+        UPDATE TB_BASIC_BOARD
+        SET VIEWS = VIEWS + 1
+        WHERE STORY_NO = #{story_no}
+    </update>
 </mapper>

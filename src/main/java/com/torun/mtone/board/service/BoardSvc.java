@@ -14,6 +14,6 @@ public interface BoardSvc {
     public void deleteStory(String story_no);
     public void inputComment(Map<String, String> comment);
     public void deleteComments(String story_no);
-
     public List<Map<String, String>> readComments(String story_no);
+    public void plusViews(String story_no);
 }

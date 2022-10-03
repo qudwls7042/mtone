@@ -50,6 +50,11 @@ public class BoardSvcImpl implements BoardSvc{
     }
 
     @Override
+    public void plusViews(String story_no) {
+        boardMapper.plusViews(story_no);
+    }
+
+    @Override
     public List<Map<String, String>> readStories() {
         List<Map<String, String>> stories = boardMapper.readStories();
         return stories;

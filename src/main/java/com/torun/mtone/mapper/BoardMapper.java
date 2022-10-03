@@ -21,4 +21,5 @@ public interface BoardMapper {
     public List<Map<String, String>> readComments(String story_no);
 
     void deleteComments(String story_no);
+    public void plusViews(String story_no);
 }
