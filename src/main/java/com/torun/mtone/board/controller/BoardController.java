@@ -48,10 +48,18 @@ public class BoardController {
         /* 조회수 로직 */
         Cookie[] cookies = request.getCookies();
 
-        if(checkNeedToCreateVisitCookie(cookies)) {
+        if(checkNeedToCreateVisitCookie(cookies, story_no)) {
             Cookie newCookie = createNewCookie(story_no);
             response.addCookie(newCookie);
             boardSvcImpl.plusViews(story_no);
+        } else {
+            for(Cookie cookie : cookies) {
+                if(!hasStoryNo(story_no, cookie)) {
+                    setStoryNo(story_no, cookie);
+                    response.addCookie(cookie);
+                    boardSvcImpl.plusViews(story_no);
+                }
+            }
         }
 
         ModelAndView mv = new ModelAndView("board/story");
@@ -60,30 +68,23 @@ public class BoardController {
         return mv;
     }
 
+    private static void setStoryNo(String story_no, Cookie cookie) {
+        cookie.setValue(cookie.getValue() + "_" + story_no);
+        cookie.setMaxAge(24*60*60);
+    }
+
     private Cookie createNewCookie(String story_no) {
         Cookie newCookie = new Cookie("visit_cookie", story_no);
         newCookie.setMaxAge(24*60*60);
         return newCookie;
     }
-    private boolean checkNeedToCreateVisitCookie(Cookie[] cookies) {
-        // 쿠키가 null이면 만들어야함
-        // 쿠키가 null이 아닌데 visit_cookie가 있으면 안만들어도됨
-        // 쿠키가 null이 아닌데 visit_cookie가 없으면 만들어야함
-        boolean needToCreateCookie = true;
 
-        if(cookies != null) {
-            int visitCookieCnt = 0;
-            for(Cookie cookie : cookies) {
-                if("visit_cookie".equals(cookie.getName())) {
-                    visitCookieCnt++;
-                }
-            }
-            if(visitCookieCnt == 1) {
-                needToCreateCookie = false;
-            }
-        }
+    private boolean checkNeedToCreateVisitCookie(Cookie[] cookies, String story_no) {
+       return cookies == null;
+    }
 
-        return needToCreateCookie;
+    private static boolean hasStoryNo(String story_no, Cookie cookie) {
+        return cookie.getValue().contains(story_no);
     }
 
     // GET
