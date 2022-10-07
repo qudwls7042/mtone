@@ -13,6 +13,10 @@ public class UserVo {
     String user_email;
     String user_tel;
 
+    public UserVo() {
+
+    }
+
     public UserVo(String user_id, String user_pw, String user_name, String user_email, String user_tel) {
         this.user_id = user_id;
         this.user_pw = user_pw;

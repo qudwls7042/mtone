@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.torun.mtone.mapper.AccountMapper">
+   <insert id="inputAccount" parameterType="UserVo">
+       INSERT INTO TB_USER_ACCOUNT
+       (
+        USER_ID, USER_PW, USER_NAME, USER_EMAIL, USER_TEL
+       )
+       VALUES
+       (
+        #{user_id}, #{user_pw}, #{user_name}, #{user_email}, #{user_tel}
+       )
+   </insert>
+
+    <select id="getUserInfo" parameterType="UserVo" resultType="ToLowerCaseMap">
+        SELECT USER_ID, USER_PW
+          FROM TB_USER_ACCOUNT
+         WHERE USER_ID = #{user_id}
+    </select>
+</mapper>
