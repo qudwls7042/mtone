@@ -54,10 +54,12 @@ public class BoardController {
             boardSvcImpl.plusViews(story_no);
         } else {
             for(Cookie cookie : cookies) {
-                if(!hasStoryNo(story_no, cookie)) {
-                    setStoryNo(story_no, cookie);
-                    response.addCookie(cookie);
-                    boardSvcImpl.plusViews(story_no);
+                if("visit_cookie".equals(cookie.getName())) {
+                    if(!hasStoryNo(story_no, cookie)) {
+                        setStoryNo(story_no, cookie);
+                        response.addCookie(cookie);
+                        boardSvcImpl.plusViews(story_no);
+                    }
                 }
             }
         }

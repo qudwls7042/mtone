@@ -11,7 +11,7 @@
 <body>
     <section>
         <h3 class="common_title">로그인</h3>
-        <form class="add_form" action="" th:object="${user}" th:action method="post">
+        <form class="add_form" action="" th:object="${loginUser}" th:action method="post">
             <div class="mb-3">
                 <input type="text" class="form-control" id="id" th:field="*{user_id}" placeholder="아이디를 입력해 주세요">
             </div>

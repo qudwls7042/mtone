@@ -15,7 +15,7 @@
    </insert>
 
     <select id="getUserInfo" parameterType="UserVo" resultType="ToLowerCaseMap">
-        SELECT USER_ID, USER_PW
+        SELECT USER_ID, USER_PW, USER_NICKNAME, USER_MBTI
           FROM TB_USER_ACCOUNT
          WHERE USER_ID = #{user_id}
     </select>

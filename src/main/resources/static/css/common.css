@@ -7,6 +7,11 @@ td {
     color: black;
 }
 
+a {
+    text-decoration:none !important;
+    color: black !important;
+}
+
 .common_title {
     padding: 15px 0px 15px 0px;
     border-bottom: 1px solid black;

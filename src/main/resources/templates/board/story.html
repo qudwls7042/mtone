@@ -15,9 +15,13 @@
             <h3 class="common_title" th:text="${story.title}">글상세</h3>
             <form id="form" class="story_form" name="form">
                 <input type="hidden" id="story_no" name="story_no" th:value="${story.story_no}">
+                <input type="hidden" id="loginUser" name="loginUser" th:value="${session.loginUser}">
+                <input type="hidden" id="loginNickname" name="loginNickname" th:value="${session.loginNickname}">
                 <input type="hidden" name="_method" value="delete" />
-                <div>
-                    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{../edit/{story_no}(story_no = ${story.story_no})}'|">글수정</button>
+                <div th:if="${session.loginUser == story.user_id}">
+                    <button type="button" class="btn btn-primary"
+                            th:onclick="|location.href='@{../edit/{story_no}(story_no = ${story.story_no})}'|">
+                        글수정</button>
                     <button type="button" id="btn_delete_story" class="btn btn-danger">글삭제</button>
                 </div>
                 <table class="table">
@@ -79,6 +83,11 @@
 
 
     let story_no = $("#story_no").val();
+    let loginUser = $("#loginUser").val();
+    let loginNickname = $("#loginNickname").val();
+
+    console.log(loginUser);
+    console.log(loginNickname);
     let params = {"story_no" : story_no};
 
     function fn_get_comments(){
@@ -94,15 +103,20 @@
             ,contentType: 'application/json'
             ,success: function(data){
                 console.log(data);
+                console.log(loginUser);
                 let str = "";
                 $.each(data, function(index, element) {
                     str=str+'<tr><td><span><label></label></span><span>'+element.writer+'</span></td>';
                     str=str+'<td><span><label></label></span><span>'+element.content+'</span></td></tr>';
                 });
-                str=str+'<tr><td colspan="2"><label>작성자</label><input type="text" id="comment_writer" name="comment_writer"/></td></tr>';
-                str=str+'<tr><td colspan="2"><label>내용</label><input type="text" id="comment_content" name="comment_content"/></td></tr>';
-                str=str+'<tr><td colspan="2"><button id="btn_write_comment" class="btn btn-success">댓글 작성</button></td></tr>';
-                $('#commentBody').append(str);
+                if(!loginUser) {
+                    $('#commentBody').append(str);
+                } else {
+                    str=str+'<tr><td colspan="2"><label>작성자</label><input readonly type="text" id="comment_writer" name="comment_writer" value="'+loginNickname+'"/></td></tr>';
+                    str=str+'<tr><td colspan="2"><label>내용</label><input type="text" id="comment_content" name="comment_content"/></td></tr>';
+                    str=str+'<tr><td colspan="2"><button id="btn_write_comment" class="btn btn-success">댓글 작성</button></td></tr>';
+                    $('#commentBody').append(str);
+                }
             }//success
         });	//ajax
     }//function

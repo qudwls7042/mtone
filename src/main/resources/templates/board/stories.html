@@ -36,7 +36,7 @@
                     <td><span th:text="${story.views}"></span></td>
                     <td><span th:text="${story.like_cnt}"></span></td>
                     <td><button type="button" class="btn btn-danger">좋아요</button></td>
-                    <input type="hidden" id="hidden_story_no" name="hidden_story_no"/>
+                    <input type="hidden" id="hidden_story_no" name="hidden_story_no" th:value="${story.story_no}"/>
                 </tr>
                 </tbody>
             </table>
