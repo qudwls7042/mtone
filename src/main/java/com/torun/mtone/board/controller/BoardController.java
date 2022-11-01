@@ -2,7 +2,10 @@ package com.torun.mtone.board.controller;
 
 import com.torun.mtone.board.service.BoardSvc;
 import com.torun.mtone.board.vo.CommentVo;
+import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
+import com.torun.mtone.common.SearchDto;
+import com.torun.mtone.paging.PagingResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +36,11 @@ public class BoardController {
         this.boardSvcImpl = boardSvcImpl;
     }
 
-    // GET
     @GetMapping("/stories")
-    public ModelAndView readStories() {
-        ModelAndView mv = new ModelAndView("board/stories");
-        mv.addObject("stories", boardSvcImpl.readStories());
-        return mv;
+    public String readStories(@ModelAttribute("params") final SearchDto params, Model model) {
+        PagingResponse<PostResponse> response = boardSvcImpl.readStories(params);
+        model.addAttribute("response", response);
+        return "board/stories";
     }
 
     // GET

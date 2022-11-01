@@ -1,13 +1,16 @@
 package com.torun.mtone.board.service;
 
+import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
+import com.torun.mtone.common.SearchDto;
+import com.torun.mtone.paging.PagingResponse;
 
 import java.util.List;
 import java.util.Map;
 
 public interface BoardSvc {
 
-    public List<Map<String, String>> readStories();
+    public PagingResponse<PostResponse> readStories(final SearchDto params);
     public Map<String, String> readStory(String story_no);
     public void inputStory(StoryVo vo);
     public void editStory(StoryVo vo);

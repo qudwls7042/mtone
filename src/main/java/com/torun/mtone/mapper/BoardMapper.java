@@ -1,6 +1,8 @@
 package com.torun.mtone.mapper;
 
+import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
+import com.torun.mtone.common.SearchDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.Map;
 
 @Mapper
 public interface BoardMapper {
-    public List<Map<String, String>> readStories();
+    public   List<PostResponse> readStories(SearchDto params);
+
+    public int getStoriesCount(SearchDto params);
 
     public void inputStory(StoryVo vo);
     public void editStory(StoryVo vo);

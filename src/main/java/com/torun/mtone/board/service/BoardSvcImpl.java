@@ -1,7 +1,12 @@
 package com.torun.mtone.board.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
+import com.torun.mtone.common.SearchDto;
 import com.torun.mtone.mapper.BoardMapper;
+import com.torun.mtone.paging.Pagination;
+import com.torun.mtone.paging.PagingResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,9 +60,14 @@ public class BoardSvcImpl implements BoardSvc{
     }
 
     @Override
-    public List<Map<String, String>> readStories() {
-        List<Map<String, String>> stories = boardMapper.readStories();
-        return stories;
+    public PagingResponse<PostResponse> readStories(final SearchDto params) {
+        int count = boardMapper.getStoriesCount(params);
+        Pagination pagination = new Pagination(count, params);
+        params.setPagination(pagination);
+
+        List<PostResponse> list = boardMapper.readStories(params);
+
+        return new PagingResponse<>(list, pagination);
     }
 
     @Override

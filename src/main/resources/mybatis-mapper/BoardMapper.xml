@@ -3,8 +3,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.torun.mtone.mapper.BoardMapper">
-    <select id="readStories" resultType="ToLowerCaseMap">
-        SELECT * FROM TB_BASIC_BOARD ORDER BY INIT_DATE DESC
+    <select id="readStories" parameterType="com.torun.mtone.common.SearchDto" resultType="com.torun.mtone.board.vo.PostResponse">
+        SELECT RN, STORY_NO AS SN, TITLE, WRITER, INIT_DATE, VIEWS
+          FROM
+        (
+         SELECT TO_CHAR(ROW_NUMBER() OVER(ORDER BY INIT_DATE DESC)) AS RN, B.*
+           FROM TB_BASIC_BOARD B
+        )
+         WHERE RN BETWEEN (#{pagination.limitStart} + 1) AND #{pagination.limitEnd}
+    </select>
+
+    <select id="getStoriesCount" parameterType="com.torun.mtone.common.SearchDto" resultType="int">
+        SELECT COUNT(*)
+          FROM TB_BASIC_BOARD
     </select>
 
     <select id="readStory" parameterType="string" resultType="ToLowerCaseMap">

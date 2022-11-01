@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- 타임리프를 사용하기 위한 태그 선언 -->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+<th:block layout:fragment="title">
+    <title>글작성 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/stories.css}">
+</th:block>
+
+<th:block layout:fragment="content">
+    <section>
+        <h3 class="common_title">글목록</h3>
+        <form class="stories_form">
+            <!-- 테이블 선언 실시 -->
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">조회수</th>
+                    <th scope="col">좋아요</th>
+                    <th scope="col">좋아요 버튼</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="story : ${response.list}">
+                    <th scope="row" th:text="${story.rn}"></th>
+                    <td><a th:text="${story.title}" th:href="@{./stories/{story_no}(story_no = ${story.story_no})}"></a></td>
+                    <td><span th:text="${story.writer}"></span></td>
+                    <td><span th:text="${story.init_date}"></span></td>
+                    <td><span th:text="${story.views}"></span></td>
+                    <td><span th:text="${story.like_cnt}"></span></td>
+                    <td><button type="button" class="btn btn-danger">좋아요</button></td>
+                    <input type="hidden" id="hidden_story_no" name="hidden_story_no" th:value="${story.story_no}"/>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+        <button th:if="${session.loginUser != null}" type="button" class="btn btn-success" onclick="location.href='/board/add'">글쓰기</button>
+    </section>
+</th:block>>
+
+<script>
+
+    let storyNo = $("#hidden_story_no").val();
+    let params = {'story_no' : storyNo};
+
+    $(document).on('click', '#btn_like', function (e) {
+        e.preventDefault();
+        $.ajax({
+           url:'../like'
+           ,type:'POST'
+           ,dataType:'JSON'
+           ,data: JSON.stringify(params)
+           ,contentType:'application/json'
+           ,success: function () {
+
+            }
+        });
+    });
+
+    $(function () {
+
+    });
+</script>
+
+</html>
