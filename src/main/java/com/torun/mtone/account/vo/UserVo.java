@@ -12,44 +12,23 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class UserVo {
     @NotEmpty
-    String user_id;
+    String userId;
     @NotEmpty
-    String user_pw;
+    String userPw;
     @NotEmpty
-    String user_name;
+    String userName;
     @NotEmpty
-    String user_nickname;
+    String userNickname;
     @NotEmpty
-    String user_mbti;
+    String userMbti;
     @NotEmpty
-    String user_email;
+    String userEmail;
     @NotEmpty
-    String user_tel;
+    String userTel;
 
     public UserVo() {
 
     }
 
-    public UserVo(String user_id, String user_pw, String user_name, String user_nickname, String user_mbti, String user_email, String user_tel) {
-        this.user_id = user_id;
-        this.user_pw = user_pw;
-        this.user_name = user_name;
-        this.user_nickname = user_nickname;
-        this.user_mbti = user_mbti;
-        this.user_email = user_email;
-        this.user_tel = user_tel;
-    }
 
-    @Override
-    public String toString() {
-        return "userVo{" +
-                "user_id='" + user_id + '\'' +
-                ", user_pw='" + user_pw + '\'' +
-                ", user_name='" + user_name + '\'' +
-                ", user_nickname='" + user_nickname + '\'' +
-                ", mbti='" + user_mbti + '\'' +
-                ", user_email='" + user_email + '\'' +
-                ", user_tel='" + user_tel + '\'' +
-                '}';
-    }
 }

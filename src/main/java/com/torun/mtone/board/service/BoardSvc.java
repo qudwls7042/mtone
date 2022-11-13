@@ -1,5 +1,6 @@
 package com.torun.mtone.board.service;
 
+import com.torun.mtone.board.vo.LikeVo;
 import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
 import com.torun.mtone.common.SearchDto;
@@ -19,4 +20,7 @@ public interface BoardSvc {
     public void deleteComments(String story_no);
     public List<Map<String, String>> readComments(String story_no);
     public void plusViews(String story_no);
+    public int getLikeIsClickedCnt(LikeVo likeVo);
+    public void deleteClickedCnt(LikeVo likeVo);
+    public void inputClickedCnt(LikeVo likeVo);
 }

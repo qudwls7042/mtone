@@ -1,6 +1,7 @@
 package com.torun.mtone.board.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.torun.mtone.board.vo.LikeVo;
 import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
 import com.torun.mtone.common.SearchDto;
@@ -57,6 +58,21 @@ public class BoardSvcImpl implements BoardSvc{
     @Override
     public void plusViews(String story_no) {
         boardMapper.plusViews(story_no);
+    }
+
+    @Override
+    public int getLikeIsClickedCnt(LikeVo likeVo) {
+        return boardMapper.getLikeIsClickedCnt(likeVo);
+    }
+
+    @Override
+    public void deleteClickedCnt(LikeVo likeVo) {
+        boardMapper.deleteClickedCnt(likeVo);
+    }
+
+    @Override
+    public void inputClickedCnt(LikeVo likeVo) {
+        boardMapper.inputClickedCnt(likeVo);
     }
 
     @Override

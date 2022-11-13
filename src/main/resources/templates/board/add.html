@@ -11,6 +11,7 @@
         <form class="add_form" action="stories.html" th:action th:object="${story}" method="post">
             <div class="mb-3">
                 <input type="hidden" class="form-control" id="writer" name="writer" th:value="${session.loginNickname}">
+                <input type="hidden" class="form-control" id="userId" name="userId" th:value="${session.loginUser}">
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="제목을 입력해 주세요">

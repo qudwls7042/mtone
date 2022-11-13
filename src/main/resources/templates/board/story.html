@@ -1,163 +1,201 @@
 <!DOCTYPE html>
-<!-- 타임리프를 사용하기 위한 태그 선언 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>글상세</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+<th:block layout:fragment="title">
+    <title>글작성 페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/story.css}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-</head>
-    <body>
-        <section>
-            <h3 class="common_title" th:text="${story.title}">글상세</h3>
-            <form id="form" class="story_form" name="form">
-                <input type="hidden" id="story_no" name="story_no" th:value="${story.story_no}">
-                <input type="hidden" id="loginUser" name="loginUser" th:value="${session.loginUser}">
-                <input type="hidden" id="loginNickname" name="loginNickname" th:value="${session.loginNickname}">
-                <input type="hidden" name="_method" value="delete" />
-                <div th:if="${session.loginUser == story.user_id}">
-                    <button type="button" class="btn btn-primary"
-                            th:onclick="|location.href='@{../edit/{story_no}(story_no = ${story.story_no})}'|">
-                        글수정</button>
-                    <button type="button" id="btn_delete_story" class="btn btn-danger">글삭제</button>
-                </div>
-                <table class="table">
-                    <thead>
+</th:block>
+<th:block layout:fragment="content">
+    <section>
+        <div>
+            <h3 class="common_title text-left" th:text="${story.title}"></h3>
+            <span style="cursor:pointer">
+                <i class="fa-regular fa-thumbs-up fa-lg" id="likeIcon"></i>
+                <input type="hidden" id="likeClickedCnt" name="likeClickedCnt" value=""/>
+            </span>
+        </div>
+        <form id="form" class="story_form" name="form">
+            <input type="hidden" id="story_no" name="story_no" th:value="${story.story_no}">
+            <input type="hidden" id="loginUser" name="loginUser" th:value="${session.loginUser}">
+            <input type="hidden" id="loginNickname" name="loginNickname" th:value="${session.loginNickname}">
+            <input type="hidden" name="_method" value="delete" />
+            <div th:if="${session.loginUser == story.user_id}">
+                <button type="button" class="btn btn-primary"
+                        th:onclick="|location.href='@{../edit/{story_no}(story_no = ${story.story_no})}'|">
+                    글수정</button>
+                <button type="button" id="btn_delete_story" class="btn btn-danger">글삭제</button>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span th:text="${story.writer}"></span></td>
+                    <td><span th:text="${story.init_date}"></span></td>
+                    <td><span th:text="${story.views}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+            <p th:text="${story.content}"></p>
+           <table class="table">
+                <thead>
                     <tr>
                         <th scope="col"></th>
                         <th scope="col"></th>
-                        <th scope="col"></th>
                     </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><span th:text="${story.writer}"></span></td>
-                        <td><span th:text="${story.init_date}"></span></td>
-                        <td><span th:text="${story.views}"></span></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><span th:text="${story.content}"></span></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p>댓글</p>
-               <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="commentBody">
-                    </tbody>
-                </table>
-            </form>
-        </section>
-    </body>
+                </thead>
+                <tbody id="commentBody">
+                </tbody>
+            </table>
+        </form>
+    </section>
+</th:block>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- 내부 js -->
-<script>
+<th:block layout:fragment="script">
 
-    jQuery.fn.serializeObject = function() {
-        let obj = null;
-        try {
-            if(this[0].tagName && this[0].tagName.toUpperCase() == "FORM" ) {
-                const arr = this.serializeArray();
-                if(arr){
-                    obj = {};
-                    jQuery.each(arr, function() {
-                        obj[this.name] = this.value;
-                    });
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 내부 js -->
+    <script>
+
+        jQuery.fn.serializeObject = function() {
+            let obj = null;
+            try {
+                if(this[0].tagName && this[0].tagName.toUpperCase() == "FORM" ) {
+                    const arr = this.serializeArray();
+                    if(arr){
+                        obj = {};
+                        jQuery.each(arr, function() {
+                            obj[this.name] = this.value;
+                        });
+                    }
                 }
-            }
-        }catch(e) {
-            alert(e.message);
-        }finally  {}
-        return obj;
-    }
+            }catch(e) {
+                alert(e.message);
+            }finally  {}
+            return obj;
+        }
 
 
-    let story_no = $("#story_no").val();
-    let loginUser = $("#loginUser").val();
-    let loginNickname = $("#loginNickname").val();
-
-    console.log(loginUser);
-    console.log(loginNickname);
-    let params = {"story_no" : story_no};
-
-    function fn_get_comments(){
-
-        console.log(params);
-        console.log(story_no);
-
-        $.ajax({
-            url : '../comments'
-            ,type: 'POST'
-            ,data : JSON.stringify(params)
-            ,dataType: 'JSON'
-            ,contentType: 'application/json'
-            ,success: function(data){
-                console.log(data);
-                console.log(loginUser);
-                let str = "";
-                $.each(data, function(index, element) {
-                    str=str+'<tr><td><span><label></label></span><span>'+element.writer+'</span></td>';
-                    str=str+'<td><span><label></label></span><span>'+element.content+'</span></td></tr>';
-                });
-                if(!loginUser) {
-                    $('#commentBody').append(str);
-                } else {
-                    str=str+'<tr><td colspan="2"><label>작성자</label><input readonly type="text" id="comment_writer" name="comment_writer" value="'+loginNickname+'"/></td></tr>';
-                    str=str+'<tr><td colspan="2"><label>내용</label><input type="text" id="comment_content" name="comment_content"/></td></tr>';
-                    str=str+'<tr><td colspan="2"><button id="btn_write_comment" class="btn btn-success">댓글 작성</button></td></tr>';
-                    $('#commentBody').append(str);
-                }
-            }//success
-        });	//ajax
-    }//function
-
-    $('#btn_delete_story').click(function() {
         let story_no = $("#story_no").val();
-        $('#form').attr('action', '../delete/' + story_no);
-        $('#form').attr('method', 'post');
-        $('#form').submit();
-    });
+        let loginUser = $("#loginUser").val();
+        let loginNickname = $("#loginNickname").val();
 
-    $(function(){
-        fn_get_comments();
+        console.log(loginUser);
+        console.log(loginNickname);
+        let params = {"story_no" : story_no};
 
-        $(document).on('click', '#btn_write_comment', function(e){
-            console.log("들어옴");
-            e.preventDefault();
-            let $form = $(this).closest("form[name='form']");
+        function fn_show_like_clicked(isClickCnt) {
+            if(isClickCnt > 0) {
+                $('#likeIcon').attr('class', 'fa-solid fa-thumbs-up fa-lg');
+                $('#likeClickedCnt').attr('value', isClickCnt);
+            } else {
+                $('#likeIcon').attr('class', 'fa-regular fa-thumbs-up fa-lg')
+                $('#likeClickedCnt').attr('value', isClickCnt)
+            }
+        }
+
+        function fn_get_likes() {
+            let likeParams = {"storyNo" : story_no, "userId" : loginUser};
             $.ajax({
-                url: '../reply'
-                , type: 'POST'
-                , dataType: 'JSON'
-                , data: JSON.stringify($form.serializeObject())
-                , contentType: 'application/json'
-                , success : function(data) {
+                url : '../likes'
+                ,type: 'POST'
+                ,data : JSON.stringify(likeParams)
+                ,dataType: 'JSON'
+                ,contentType: 'application/json'
+                ,success: function(isClickCnt){
+                    fn_show_like_clicked(isClickCnt)
+                }//success
+            });	//ajax
+        }
+
+        function fn_get_comments(){
+            $.ajax({
+                url : '../comments'
+                ,type: 'POST'
+                ,data : JSON.stringify(params)
+                ,dataType: 'JSON'
+                ,contentType: 'application/json'
+                ,success: function(data){
                     console.log(data);
-                    //$form.find("input[name='comment_content']").val('');
-                    $("#commentBody").html('');
-                    fn_get_comments();
-                }
-                , error : function () {
-                    console.log("실패");
-                }
+                    console.log(loginUser);
+                    let str = "";
+                    $.each(data, function(index, element) {
+                        str=str+'<tr><td><span><label></label></span><span>'+element.writer+'</span></td>';
+                        str=str+'<td><span><label></label></span><span>'+element.content+'</span></td></tr>';
+                    });
+                    if(!loginUser) {
+                        $('#commentBody').append(str);
+                    } else {
+                        str=str+'<tr><td class="text-left" colspan="2"><label>작성자</label><input readonly type="text" id="comment_writer" name="comment_writer" value="'+loginNickname+'"/></td></tr>';
+                        str=str+'<tr><td class="text-left" colspan="2"><label>내용</label><input type="text" id="comment_content" name="comment_content"/></td></tr>';
+                        str=str+'<tr><td class="text-left" colspan="2"><button id="btn_write_comment" class="btn btn-success">댓글 작성</button></td></tr>';
+                        $('#commentBody').append(str);
+                    }
+                }//success
+            });	//ajax
+        }//function
+
+        $(function(){
+            fn_get_likes();
+            fn_get_comments();
+
+            $(document).on('click', '#btn_write_comment', function(e){
+                console.log("들어옴");
+                e.preventDefault();
+                let $form = $(this).closest("form[name='form']");
+                $.ajax({
+                    url: '../reply'
+                    , type: 'POST'
+                    , dataType: 'JSON'
+                    , data: JSON.stringify($form.serializeObject())
+                    , contentType: 'application/json'
+                    , success : function(data) {
+                        console.log(data);
+                        //$form.find("input[name='comment_content']").val('');
+                        $("#commentBody").html('');
+                        fn_get_comments();
+                    }
+                    , error : function () {
+                        console.log("실패");
+                    }
+                });
+            });
+
+            $(document).on('click', '#likeIcon', function(e){
+                console.log("들어옴");
+                let clickedCnt = $("#likeClickedCnt").val();
+                let likeParams = {"storyNo" : story_no, "userId" : loginUser, "clickedCnt" : clickedCnt};
+
+                e.preventDefault();
+                $.ajax({
+                    url: '../likes/click'
+                    , type: 'POST'
+                    , dataType: 'JSON'
+                    ,data : JSON.stringify(likeParams)
+                    , contentType: 'application/json'
+                    , success : function(isClickCnt) {
+                        fn_show_like_clicked(isClickCnt)
+                    }
+                    , error : function () {
+                        console.log("실패");
+                    }
+                });
             });
         });
 
-        /*$('#btn_write_comment').click(function (e) {
+        $('#btn_delete_story').click(function() {
+            let story_no = $("#story_no").val();
+            $('#form').attr('action', '../delete/' + story_no);
+            $('#form').attr('method', 'post');
+            $('#form').submit();
+        });
+    </script>
+</th:block>
 
-        });*/
-
-    });
-</script>
 
 </html>

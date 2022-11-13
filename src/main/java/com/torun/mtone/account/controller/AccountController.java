@@ -42,8 +42,8 @@ public class AccountController {
 
     @PostMapping("/add")
     public String signIn(UserVo user) {
-        String encodedPassword = passwordEncoder.encode(user.getUser_pw());
-        user.setUser_pw(encodedPassword);
+        String encodedPassword = passwordEncoder.encode(user.getUserPw());
+        user.setUserPw(encodedPassword);
         accountSvcImpl.inputAccount(user);
         return "redirect:/home";
     }
@@ -61,7 +61,7 @@ public class AccountController {
         if(userInfo == null) {
             return "redirect:/account/login";
         }
-        String userEnteredPassword = loginUser.getUser_pw();
+        String userEnteredPassword = loginUser.getUserPw();
         String actualPassword = userInfo.get("user_pw");
 
         if(passwordEncoder.matches(userEnteredPassword, actualPassword)) {

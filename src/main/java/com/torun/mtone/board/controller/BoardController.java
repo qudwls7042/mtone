@@ -2,6 +2,7 @@ package com.torun.mtone.board.controller;
 
 import com.torun.mtone.board.service.BoardSvc;
 import com.torun.mtone.board.vo.CommentVo;
+import com.torun.mtone.board.vo.LikeVo;
 import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
 import com.torun.mtone.common.SearchDto;
@@ -44,30 +45,30 @@ public class BoardController {
     }
 
     // GET
-    @GetMapping("/stories/{story_no}")
-    public ModelAndView readStory(@PathVariable String story_no, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/stories/{storyNo}")
+    public ModelAndView readStory(@PathVariable String storyNo, HttpServletRequest request, HttpServletResponse response) {
 
         /* 조회수 로직 */
         Cookie[] cookies = request.getCookies();
 
-        if(checkNeedToCreateVisitCookie(cookies, story_no)) {
-            Cookie newCookie = createNewCookie(story_no);
+        if(checkNeedToCreateVisitCookie(cookies, storyNo)) {
+            Cookie newCookie = createNewCookie(storyNo);
             response.addCookie(newCookie);
-            boardSvcImpl.plusViews(story_no);
+            boardSvcImpl.plusViews(storyNo);
         } else {
             for(Cookie cookie : cookies) {
                 if("visit_cookie".equals(cookie.getName())) {
-                    if(!hasStoryNo(story_no, cookie)) {
-                        setStoryNo(story_no, cookie);
+                    if(!hasStoryNo(storyNo, cookie)) {
+                        setStoryNo(storyNo, cookie);
                         response.addCookie(cookie);
-                        boardSvcImpl.plusViews(story_no);
+                        boardSvcImpl.plusViews(storyNo);
                     }
                 }
             }
         }
 
         ModelAndView mv = new ModelAndView("board/story");
-        mv.addObject("story", boardSvcImpl.readStory(story_no));
+        mv.addObject("story", boardSvcImpl.readStory(storyNo));
 
         return mv;
     }
@@ -106,25 +107,25 @@ public class BoardController {
     }
 
     // GET
-    @GetMapping("/edit/{story_no}")
-    public ModelAndView moveToEditForm(@PathVariable String story_no) {
+    @GetMapping("/edit/{storyNo}")
+    public ModelAndView moveToEditForm(@PathVariable String storyNo) {
         ModelAndView mv = new ModelAndView("board/edit");
-        mv.addObject("story", boardSvcImpl.readStory(story_no));
+        mv.addObject("story", boardSvcImpl.readStory(storyNo));
         return mv;
     }
 
     // PUT
-    @PutMapping ("/edit/{story_no}")
-    public String editStory(StoryVo story, String story_no) {
+    @PutMapping ("/edit/{storyNo}")
+    public String editStory(StoryVo story, String storyNo) {
         boardSvcImpl.editStory(story);
-        return "redirect:/board/stories/" + story_no;
+        return "redirect:/board/stories/" + storyNo;
     }
 
     // DELETE
-    @DeleteMapping("/delete/{story_no}")
-    public String deleteStory(@PathVariable String story_no) {
-        boardSvcImpl.deleteStory(story_no);
-        boardSvcImpl.deleteComments(story_no);
+    @DeleteMapping("/delete/{storyNo}")
+    public String deleteStory(@PathVariable String storyNo) {
+        boardSvcImpl.deleteStory(storyNo);
+        boardSvcImpl.deleteComments(storyNo);
         return "redirect:/board/stories";
     }
 
@@ -145,5 +146,22 @@ public class BoardController {
         result.put("result", true);
         result.put("msg", "성공");
         return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/likes")
+    public int getLikes(@RequestBody LikeVo likeVo) {
+        return boardSvcImpl.getLikeIsClickedCnt(likeVo);
+    }
+
+    @ResponseBody
+    @PostMapping("/likes/click")
+    public int clickLike(@RequestBody LikeVo likeVo) {
+        if(likeVo.getClickedCnt() > 0) {
+            boardSvcImpl.deleteClickedCnt(likeVo);
+        } else {
+            boardSvcImpl.inputClickedCnt(likeVo);
+        }
+        return boardSvcImpl.getLikeIsClickedCnt(likeVo);
     }
 }

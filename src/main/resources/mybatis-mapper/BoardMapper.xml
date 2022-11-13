@@ -4,12 +4,19 @@
 
 <mapper namespace="com.torun.mtone.mapper.BoardMapper">
     <select id="readStories" parameterType="com.torun.mtone.common.SearchDto" resultType="com.torun.mtone.board.vo.PostResponse">
-        SELECT RN, STORY_NO AS SN, TITLE, WRITER, INIT_DATE, VIEWS
+        SELECT RN, STORY_NO , TITLE, WRITER, INIT_DATE, VIEWS, LIKE_CNT
           FROM
-        (
-         SELECT TO_CHAR(ROW_NUMBER() OVER(ORDER BY INIT_DATE DESC)) AS RN, B.*
-           FROM TB_BASIC_BOARD B
-        )
+              (
+               SELECT TO_CHAR(ROW_NUMBER() OVER(ORDER BY INIT_DATE DESC)) AS RN
+                    , B.STORY_NO , B.TITLE, B.WRITER, B.INIT_DATE, B.VIEWS, NVL(LK.LIKE_CNT, 0) AS LIKE_CNT
+                 FROM TB_BASIC_BOARD B
+                 LEFT OUTER JOIN (
+                                 SELECT STORY_NO, COUNT(*) AS LIKE_CNT
+                                   FROM TB_LIKES A
+                                  GROUP BY STORY_NO
+                                ) LK
+                   ON (B.STORY_NO = LK.STORY_NO)
+              )
          WHERE RN BETWEEN (#{pagination.limitStart} + 1) AND #{pagination.limitEnd}
     </select>
 
@@ -19,18 +26,19 @@
     </select>
 
     <select id="readStory" parameterType="string" resultType="ToLowerCaseMap">
-        SELECT * FROM TB_BASIC_BOARD WHERE STORY_NO = #{story_no}
+        SELECT * FROM TB_BASIC_BOARD WHERE STORY_NO = #{storyNo}
     </select>
 
     <insert id="inputStory" parameterType="StoryVo">
         INSERT INTO TB_BASIC_BOARD
         (
-         story_no
-         , title
-         , content
-         , init_date
-         , update_date
-         , writer
+           STORY_NO
+         , TITLE
+         , CONTENT
+         , INIT_DATE
+         , UPDATE_DATE
+         , WRITER
+         , USER_ID
          )
         VALUES
         (
@@ -39,13 +47,14 @@
          , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
          , NULL
          , #{writer}
+         , #{userId}
          )
     </insert>
 
     <update id="editStory" parameterType="StoryVo">
         UPDATE TB_BASIC_BOARD
            SET CONTENT = #{content}
-         WHERE STORY_NO = #{story_no}
+         WHERE STORY_NO = #{storyNo}
     </update>
 
     <delete id="deleteStory" parameterType="string">
@@ -87,4 +96,24 @@
         SET VIEWS = VIEWS + 1
         WHERE STORY_NO = #{story_no}
     </update>
+
+    <select id="getLikeIsClickedCnt" parameterType="LikeVo" resultType="int">
+        SELECT COUNT(*)
+          FROM TB_LIKES
+         WHERE USER_ID = #{userId}
+           AND STORY_NO = #{storyNo}
+    </select>
+
+    <delete id="deleteClickedCnt" parameterType="LikeVo">
+        DELETE
+          FROM TB_LIKES
+         WHERE USER_ID = #{userId}
+           AND STORY_NO = #{storyNo}
+    </delete>
+
+    <insert id="inputClickedCnt" parameterType="LikeVo">
+        INSERT INTO TB_LIKES (USER_ID, STORY_NO)
+        VALUES (#{userId}, #{storyNo})
+    </insert>
+
 </mapper>

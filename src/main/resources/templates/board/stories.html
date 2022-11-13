@@ -2,11 +2,12 @@
 <!-- 타임리프를 사용하기 위한 태그 선언 -->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 <th:block layout:fragment="title">
-    <title>글작성 페이지</title>
+    <title>글목록</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/stories.css}">
 </th:block>
 
 <th:block layout:fragment="content">
+    <h3 class="common_title">글목록</h3>
     <div class="table-responsive clearfix">
         <table class="table table-hover">
             <thead>
@@ -16,6 +17,7 @@
                 <th>작성자</th>
                 <th>작성일</th>
                 <th>조회수</th>
+                <th>좋아요</th>
             </tr>
             </thead>
             <tbody id="list">
@@ -24,7 +26,7 @@
         </table>
 
         <div class="btn_wrap text-right">
-            <a th:href="@{/board/add}" class="btn btn-primary waves-effect waves-light">등록</a>
+            <a th:if="${session.loginUser != null}" th:href="@{/board/add}" class="btn btn-primary waves-effect waves-light">등록</a>
         </div>
 
         <th:block layout:fragment="paging">
@@ -73,11 +75,12 @@
             list.forEach(obj => {
                 html += `
                         <tr>
-                            <td class="text-left"><a href="/board/stories/${obj.story_no}">${obj.rn}</a></td>
-                            <td>${obj.title}</td>
+                            <td class="text-left">${obj.rn}</td>
+                            <td><a href="/board/stories/${obj.storyNo}">${obj.title}</a></td>
                             <td>${obj.writer}</td>
-                            <td>${obj.name}</td>
-                            <td>${obj.sn}</td>
+                            <td>${obj.initDate}</td>
+                            <td>${obj.views}</td>
+                            <td>${obj.likeCnt}</td>
                         </tr>
                     `;
             })

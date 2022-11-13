@@ -6,17 +6,17 @@
    <insert id="inputAccount" parameterType="UserVo">
        INSERT INTO TB_USER_ACCOUNT
        (
-        USER_ID, USER_PW, USER_NAME, USER_EMAIL, USER_TEL
+        USER_ID, USER_PW, USER_NAME, USER_EMAIL, USER_TEL, USER_NICKNAME, USER_MBTI
        )
        VALUES
        (
-        #{user_id}, #{user_pw}, #{user_name}, #{user_email}, #{user_tel}
+        #{userId}, #{userPw}, #{userName}, #{userEmail}, #{userTel}, #{userNickname}, #{userMbti}
        )
    </insert>
 
     <select id="getUserInfo" parameterType="UserVo" resultType="ToLowerCaseMap">
         SELECT USER_ID, USER_PW, USER_NICKNAME, USER_MBTI
           FROM TB_USER_ACCOUNT
-         WHERE USER_ID = #{user_id}
+         WHERE USER_ID = #{userId}
     </select>
 </mapper>

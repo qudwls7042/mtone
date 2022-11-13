@@ -1,5 +1,6 @@
 package com.torun.mtone.mapper;
 
+import com.torun.mtone.board.vo.LikeVo;
 import com.torun.mtone.board.vo.PostResponse;
 import com.torun.mtone.board.vo.StoryVo;
 import com.torun.mtone.common.SearchDto;
@@ -26,4 +27,7 @@ public interface BoardMapper {
 
     void deleteComments(String story_no);
     public void plusViews(String story_no);
+    public int getLikeIsClickedCnt(LikeVo likeVo);
+    public void deleteClickedCnt(LikeVo likeVo);
+    public void inputClickedCnt(LikeVo likeVo);
 }
