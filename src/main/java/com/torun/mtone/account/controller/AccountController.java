@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.Map;
 
@@ -41,7 +43,17 @@ public class AccountController {
     }
 
     @PostMapping("/add")
-    public String signIn(UserVo user) {
+    public String signIn(@Valid UserVo user, Errors errors , Model model) {
+        if(errors.hasErrors()) {
+            // 유효성 통과 못한 필드와 메시지를 핸들링
+            Map<String, String> validatorResult = accountSvcImpl.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "account/add";
+        }
+
         String encodedPassword = passwordEncoder.encode(user.getUserPw());
         user.setUserPw(encodedPassword);
         accountSvcImpl.inputAccount(user);
@@ -92,7 +104,7 @@ public class AccountController {
         if (session != null) {
             session.invalidate();
         }
-        return "redirect:/";
+        return "redirect:/home";
     }
 
     private void printLoginUserInSession(HttpSession session) {

@@ -14,13 +14,13 @@
             </span>
         </div>
         <form id="form" class="story_form" name="form">
-            <input type="hidden" id="story_no" name="story_no" th:value="${story.story_no}">
+            <input type="hidden" id="story_no" name="story_no" th:value="${story.storyNo}">
             <input type="hidden" id="loginUser" name="loginUser" th:value="${session.loginUser}">
             <input type="hidden" id="loginNickname" name="loginNickname" th:value="${session.loginNickname}">
             <input type="hidden" name="_method" value="delete" />
-            <div th:if="${session.loginUser == story.user_id}">
+            <div th:if="${session.loginUser == story.userId}">
                 <button type="button" class="btn btn-primary"
-                        th:onclick="|location.href='@{../edit/{story_no}(story_no = ${story.story_no})}'|">
+                        th:onclick="|location.href='@{../edit/{storyNo}(storyNo = ${story.storyNo})}'|">
                     글수정</button>
                 <button type="button" id="btn_delete_story" class="btn btn-danger">글삭제</button>
             </div>
@@ -35,7 +35,7 @@
                 <tbody>
                 <tr>
                     <td><span th:text="${story.writer}"></span></td>
-                    <td><span th:text="${story.init_date}"></span></td>
+                    <td><span th:text="${story.initDate}"></span></td>
                     <td><span th:text="${story.views}"></span></td>
                 </tr>
                 </tbody>

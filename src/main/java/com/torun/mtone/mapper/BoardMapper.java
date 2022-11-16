@@ -20,7 +20,7 @@ public interface BoardMapper {
 
     public void deleteStory(String story_no);
 
-    public Map<String, String> readStory(String story_no);
+    public StoryVo readStory(String storyNo);
 
     public void inputComment(Map<String, String> comment);
     public List<Map<String, String>> readComments(String story_no);

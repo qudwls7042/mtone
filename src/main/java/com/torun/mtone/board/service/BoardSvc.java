@@ -12,7 +12,7 @@ import java.util.Map;
 public interface BoardSvc {
 
     public PagingResponse<PostResponse> readStories(final SearchDto params);
-    public Map<String, String> readStory(String story_no);
+    public StoryVo readStory(String storyNo);
     public void inputStory(StoryVo vo);
     public void editStory(StoryVo vo);
     public void deleteStory(String story_no);

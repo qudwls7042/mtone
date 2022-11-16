@@ -46,50 +46,69 @@ public class BoardController {
 
     // GET
     @GetMapping("/stories/{storyNo}")
-    public ModelAndView readStory(@PathVariable String storyNo, HttpServletRequest request, HttpServletResponse response) {
+    public String readStory(@PathVariable String storyNo, Model model, HttpServletRequest request, HttpServletResponse response) {
 
         /* 조회수 로직 */
         Cookie[] cookies = request.getCookies();
 
-        if(checkNeedToCreateVisitCookie(cookies, storyNo)) {
+        if(cookies == null) {
             Cookie newCookie = createNewCookie(storyNo);
             response.addCookie(newCookie);
             boardSvcImpl.plusViews(storyNo);
-        } else {
-            for(Cookie cookie : cookies) {
-                if("visit_cookie".equals(cookie.getName())) {
-                    if(!hasStoryNo(storyNo, cookie)) {
-                        setStoryNo(storyNo, cookie);
-                        response.addCookie(cookie);
-                        boardSvcImpl.plusViews(storyNo);
-                    }
+            return "board/story";
+        }
+
+        // 쿠키 존재함 (세션 포함)
+
+        // 1. visit_cookie라는 이름을 가진 쿠키가 있는지 체크
+        // 있다면 해당 쿠키의 값에 스토리 넘버가 있는지 체크
+        // 있으면 return
+        // 없으면 value에 스토리 넘버를 추가 -> 조회수 1 증가
+
+        StoryVo story = boardSvcImpl.readStory(storyNo);
+
+        for(Cookie cookie : cookies) {
+            if("visit_cookie".equals(cookie.getName())) {
+                // visit_cookie가 있으면
+                if(!hasStoryNo(storyNo, cookie)) {
+                    // visit_cookie 값에 storyNo가 없으면
+                    setStoryNo(storyNo, cookie);
+                    response.addCookie(cookie);
+                    boardSvcImpl.plusViews(storyNo);
                 }
+                // visit_cookie 값에 storyNo가 있으면
+                model.addAttribute("story", story);
+                return "board/story";
+            } else {
+                // visit_cookie가 없으면
+                Cookie visitCookie = createNewCookie(storyNo);
+                response.addCookie(visitCookie);
+                boardSvcImpl.plusViews(storyNo);
             }
         }
 
-        ModelAndView mv = new ModelAndView("board/story");
-        mv.addObject("story", boardSvcImpl.readStory(storyNo));
+        model.addAttribute("story", story);
 
-        return mv;
+        return "board/story";
     }
 
-    private static void setStoryNo(String story_no, Cookie cookie) {
-        cookie.setValue(cookie.getValue() + "_" + story_no);
+    private static void setStoryNo(String storyNo, Cookie cookie) {
+        cookie.setValue(cookie.getValue() + "_" + storyNo);
         cookie.setMaxAge(24*60*60);
     }
 
-    private Cookie createNewCookie(String story_no) {
-        Cookie newCookie = new Cookie("visit_cookie", story_no);
+    private Cookie createNewCookie(String storyNo) {
+        Cookie newCookie = new Cookie("visit_cookie", storyNo);
         newCookie.setMaxAge(24*60*60);
         return newCookie;
     }
 
-    private boolean checkNeedToCreateVisitCookie(Cookie[] cookies, String story_no) {
+    private boolean checkNeedToCreateVisitCookie(Cookie[] cookies, String storyNo) {
        return cookies == null;
     }
 
-    private static boolean hasStoryNo(String story_no, Cookie cookie) {
-        return cookie.getValue().contains(story_no);
+    private static boolean hasStoryNo(String storyNo, Cookie cookie) {
+        return cookie.getValue().contains(storyNo);
     }
 
     // GET

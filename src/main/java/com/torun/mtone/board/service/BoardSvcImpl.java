@@ -87,8 +87,8 @@ public class BoardSvcImpl implements BoardSvc{
     }
 
     @Override
-    public Map<String, String> readStory(String story_no) {
-        Map<String, String> story = boardMapper.readStory(story_no);
+    public StoryVo readStory(String story_no) {
+        StoryVo story = boardMapper.readStory(story_no);
         return story;
     }
 }

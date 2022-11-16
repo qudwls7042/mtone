@@ -25,7 +25,7 @@
           FROM TB_BASIC_BOARD
     </select>
 
-    <select id="readStory" parameterType="string" resultType="ToLowerCaseMap">
+    <select id="readStory" parameterType="string" resultType="StoryVo">
         SELECT * FROM TB_BASIC_BOARD WHERE STORY_NO = #{storyNo}
     </select>
 

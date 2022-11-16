@@ -8,27 +8,34 @@
 <th:block layout:fragment="content">
     <section>
         <h3 class="common_title">회원가입</h3>
-        <form class="add_form" action="stories.html" th:object="${newUser}" th:action method="post">
+        <form class="add_form" action="stories.html" th:action method="post">
             <div class="mb-3">
-                <input type="text" class="form-control" id="id" th:field="*{userId}" placeholder="아이디를 입력해 주세요">
+                <input type="text" class="form-control" id="id" name="userId" placeholder="아이디를 입력해 주세요">
+                <span style="color: red" th:text="${valid_userId}"></span>
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control" id="pw" th:field="*{userPw}" placeholder="비밀번호를 입력해 주세요">
+                <input type="password" class="form-control" id="pw" name="userPw" placeholder="비밀번호를 입력해 주세요">
+                <span style="color: red" th:text="${valid_userPw}"></span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="userNickname" th:field="*{userNickname}" placeholder="닉네임을 입력해 주세요">
+                <input type="text" class="form-control" id="userNickname" name="userNickname" placeholder="닉네임을 입력해 주세요">
+                <span style="color: red" th:text="${valid_userNickname}"></span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="username" th:field="*{userName}" placeholder="성함을 입력해 주세요">
+                <input type="text" class="form-control" id="username" name="userName" placeholder="성함을 입력해 주세요">
+                <span style="color: red" th:text="${valid_userName}"></span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="email" th:field="*{userEmail}" placeholder="이메일을 입력해 주세요">
+                <input type="emailx" class="form-control" id="email" name="userEmail" placeholder="이메일을 입력해 주세요">
+                <span style="color: red" th:text="${valid_userEmail}"></span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="tel" th:field="*{userTel}" placeholder="핸드폰 번호를 입력해 주세요">
+                <input type="text" class="form-control" id="tel" name="userTel" placeholder="핸드폰 번호를 입력해 주세요">
+                <span style="color: red" th:text="${valid_userTel}"></span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="mbti" th:field="*{userMbti}" placeholder="MBTI를 입력해 주세요">
+                <input type="text" class="form-control" id="mbti" name="userMbti" placeholder="MBTI를 입력해 주세요">
+                <span style="color: red" th:text="${valid_userMbti}"></span>
             </div>
             <button type="submit" class="btn btn-outline-success">등록</button>
         </form>
