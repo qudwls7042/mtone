@@ -11,35 +11,96 @@
         <form class="add_form" action="stories.html" th:action method="post">
             <div class="mb-3">
                 <input type="text" class="form-control" id="id" name="userId" placeholder="아이디를 입력해 주세요">
-                <span style="color: red" th:text="${valid_userId}"></span>
+                <span id="valid_userId" style="color: red" th:text="${valid_userId}"></span>
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" id="pw" name="userPw" placeholder="비밀번호를 입력해 주세요">
-                <span style="color: red" th:text="${valid_userPw}"></span>
+                <span id="valid_userPw" style="color: red" th:text="${valid_userPw}"></span>
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="userNickname" name="userNickname" placeholder="닉네임을 입력해 주세요">
-                <span style="color: red" th:text="${valid_userNickname}"></span>
+                <span id="valid_userNickname" style="color: red" th:text="${valid_userNickname}"></span>
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="username" name="userName" placeholder="성함을 입력해 주세요">
-                <span style="color: red" th:text="${valid_userName}"></span>
+                <span id="valid_userName" style="color: red" th:text="${valid_userName}"></span>
             </div>
             <div class="mb-3">
-                <input type="emailx" class="form-control" id="email" name="userEmail" placeholder="이메일을 입력해 주세요">
-                <span style="color: red" th:text="${valid_userEmail}"></span>
+                <input type="email" class="form-control" id="email" name="userEmail" placeholder="이메일을 입력해 주세요">
+                <span id="valid_userEmail" style="color: red" th:text="${valid_userEmail}"></span>
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="tel" name="userTel" placeholder="핸드폰 번호를 입력해 주세요">
-                <span style="color: red" th:text="${valid_userTel}"></span>
+                <span id="valid_userTel" style="color: red" th:text="${valid_userTel}"></span>
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="mbti" name="userMbti" placeholder="MBTI를 입력해 주세요">
-                <span style="color: red" th:text="${valid_userMbti}"></span>
+                <span id="valid_userMbti" style="color: red" th:text="${valid_userMbti}"></span>
             </div>
             <button type="submit" class="btn btn-outline-success">등록</button>
         </form>
     </section>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script>
+        $('#id').on('keyup' ,function(event) {
+            if (!/^[a-zA-Z0-9-_]{2,10}$/g.test($('#id').val())) {
+                $('#valid_userId').html("<i class='bi bi-exclamation-circle'></i> 아이디는 한글,특수문자를 제외한 2~10자리여야 합니다.");
+                $('#valid_userId').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userId').empty();
+            }
+        });
+        $('#pw').on('keyup' ,function(event) {
+            if (!/^[0-9]{4,10}$/g.test($('#pw').val())) {
+                $('#valid_userPw').html("<i class='bi bi-exclamation-circle'></i> 비밀번호는 4~10자 숫자를 사용하세요.");
+                $('#valid_userPw').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userPw').empty();
+            }
+        });
+        $('#userNickname').on('keyup' ,function(event) {
+            if (!/^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$/g.test($('#userNickname').val())) {
+                $('#valid_userNickname').html("<i class='bi bi-exclamation-circle'></i> 닉네임은 특수문자를 제외한 2~10자리여야 합니다.");
+                $('#valid_userNickname').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userNickname').empty();
+            }
+        });
+        $('#username').on('keyup' ,function(event) {
+            if (!/^[가-힣]{1,10}$/g.test($('#username').val())) {
+                $('#valid_userName').html("<i class='bi bi-exclamation-circle'></i> 1~10 자리의 한글을 입력해주세요.");
+                $('#valid_userName').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userName').empty();
+            }
+        });
+        $('#email').on('keyup' ,function(event) {
+            if (!/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i.test($('#email').val())) {
+                $('#valid_userEmail').html("<i class='bi bi-exclamation-circle'></i> 유효한 이메일 주소를 입력해 주세요.");
+                $('#valid_userEmail').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userEmail').empty();
+            }
+        });
+        $('#tel').on('keyup' ,function(event) {
+            if (!/^(?:(010\d{4})|(01[1|6|7|8|9]-\d{3,4}))(\d{4})$/.test($('#tel').val())) {
+                $('#valid_userTel').html("<i class='bi bi-exclamation-circle'></i> 유효한 핸드폰 번호 양식으로 입력해주세요.");
+                $('#valid_userTel').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userTel').empty();
+            }
+        });
+        $('#mbti').on('keyup' ,function(event) {
+            if (!/^[A-Z]{4}$/g.test($('#mbti').val())) {
+                $('#valid_userMbti').html("<i class='bi bi-exclamation-circle'></i> MBTI를 대문자 4자리로 입력해주세요.");
+                $('#valid_userMbti').show(); // show() 메소드 추가
+            } else {
+                $('#valid_userMbti').empty();
+            }
+        });
+    </script>
 </th:block>
 
 </html>

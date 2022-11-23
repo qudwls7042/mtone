@@ -8,6 +8,7 @@
 <th:block layout:fragment="content">
     <section>
         <h3 class="common_title">글쓰기</h3>
+        <a href="/board/stories"><i class="fa-solid fa-list fa-lg"></i></a>
         <form class="add_form" action="stories.html" th:action th:object="${story}" method="post">
             <div class="mb-3">
                 <input type="hidden" class="form-control" id="writer" name="writer" th:value="${session.loginNickname}">

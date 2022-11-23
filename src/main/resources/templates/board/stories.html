@@ -41,7 +41,6 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        /*<![CDATA[*/
 
         window.onload = () => {
             findAllPost();
@@ -135,7 +134,7 @@
             location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
         }
 
-        /*]]>*/
+
     </script>
 </th:block>
 </html>

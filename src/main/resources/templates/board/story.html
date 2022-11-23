@@ -8,8 +8,9 @@
     <section>
         <div>
             <h3 class="common_title text-left" th:text="${story.title}"></h3>
+            <a href="/board/stories"><i class="fa-solid fa-list fa-lg"></i></a>
             <span style="cursor:pointer">
-                <i class="fa-regular fa-thumbs-up fa-lg" id="likeIcon"></i>
+                <i th:if="${session.loginUser != null}" class="fa-regular fa-thumbs-up fa-lg" id="likeIcon"></i>
                 <input type="hidden" id="likeClickedCnt" name="likeClickedCnt" value=""/>
             </span>
         </div>

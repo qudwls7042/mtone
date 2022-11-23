@@ -7,10 +7,9 @@
     <div class="row row-inline-block small-spacing">
       <div class="col-xs-12">
         <div class="box-content">
-
           <div class="fixed-navbar">
             <div class="pull-left">
-              <h1 class="page-title">MBTI WORLD</h1>
+              <h1 class="page-title"><a th:href="@{/home}">MBTI WORLD</a></h1>
             </div>
             <div class="pull-right" th:if="${session.loginUser != null}">
               <h1 class="page-title" th:text="${session.loginNickname}"></h1>
